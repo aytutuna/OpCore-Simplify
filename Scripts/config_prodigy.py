@@ -656,7 +656,8 @@ class ConfigProdigy:
         config["Kernel"]["Quirks"]["AppleXcpmExtraMsrs"] = self.is_intel_hedt_cpu(hardware_report.get("CPU").get("Processor Name"), hardware_report.get("CPU").get("Codename")) and hardware_report.get("CPU").get("Codename") in cpu_data.IntelCPUGenerations[50:]
         config["Kernel"]["Quirks"]["AppleXcpmForceBoost"] = hardware_report.get("CPU").get("Codename") in cpu_data.IntelCPUGenerations[:4]
         config["Kernel"]["Quirks"]["CustomSMBIOSGuid"] = True
-        config["Kernel"]["Quirks"]["DisableIoMapper"] = not "AMD" in hardware_report.get("CPU").get("Manufacturer")
+        config["Kernel"]["Quirks"]["DisableIoMapper"] = not "AMD" in hardware_report.get("CPU").get("Manufacturer") and \
+            not any(network_props.get("Device ID") in pci_data.AquantiaAqtionIDs for network_props in hardware_report.get("Network", {}).values())
         config["Kernel"]["Quirks"]["DisableRtcChecksum"] = "ASUS" in hardware_report.get("Motherboard").get("Name") or "HP " in hardware_report.get("Motherboard").get("Name")
         config["Kernel"]["Quirks"]["ForceAquantiaEthernet"] = any(network_props.get("Device ID") in pci_data.AquantiaAqtionIDs for network_props in hardware_report.get("Network", {}).values())
         config["Kernel"]["Quirks"]["LapicKernelPanic"] = "HP " in hardware_report.get("Motherboard").get("Name")
